@@ -1,0 +1,105 @@
+exp_values_1 = np.zeros((3,M_1+1))
+exp_values_1_uncertainty = np.zeros((3,M_1+1))
+
+for i in range(M_1+1):
+    exp_values_1[0,i] = np.mean(exp_values_raw_1.T[i,0])
+    exp_values_1[1,i] = np.mean(exp_values_raw_1.T[i,1])
+    exp_values_1[2,i] = np.mean(exp_values_raw_1.T[i,2])
+    
+    exp_values_1_uncertainty[0,i] = np.std(exp_values_raw_1.T[i,0], ddof=1)
+    exp_values_1_uncertainty[1,i] = np.std(exp_values_raw_1.T[i,1], ddof=1)
+    exp_values_1_uncertainty[2,i] = np.std(exp_values_raw_1.T[i,2], ddof=1)
+exp_values_1_uncertainty[0]
+
+
+
+
+font_size = 10 # label font size
+fig, axs = plt.subplots(2,3, constrained_layout=True, figsize=(15,7), sharex=True)
+
+if opt_approach == "max":
+    h_p_string = r", $\langle H_p \rangle_{max} = $"
+elif opt_approach == "min":
+    h_p_string = r", $\langle H_p \rangle_{min} = $"
+
+s_p_string_1 = r", $S_{end} = $"
+s_p_string_2 = r", $S_{min} = $"
+f_p_string = r", $|\langle \gamma,\beta |\phi_0\rangle|_{end} = $"
+
+# plot energy values if no additional entropy minimization has been performed
+axs[0,0].errorbar(np.arange(M_1+1),exp_values_1[0], yerr=exp_values_1_std[0], label=r"$p = $"+str(p_array[0])+", $M = $"+str(M_1)+h_p_string+str(round(exp_values_1[0,M_1-1],2)))
+axs[0,0].plot(np.arange(M_1+1),exp_values_1[1], label=r"$p = $"+str(p_array[1])+", $M = $"+str(M_1)+h_p_string+str(round(exp_values_1[1,M_1-1],2)))
+axs[0,0].plot(np.arange(M_1+1),exp_values_1[2], label=r"$p = $"+str(p_array[2])+", $M = $"+str(M_1)+h_p_string+str(round(exp_values_1[2,M_1-1],2)))
+axs[0,0].legend(fontsize=font_size, loc="lower right")
+axs[0,0].set_ylabel(r"$\langle H_p \rangle$", fontsize=font_size)
+
+# plot energy values if additional entropy minimization has been performed
+axs[1,0].plot(np.arange(M_2+1),exp_values_2[0], label=r"$p = $"+str(p_array[0])+", $M = $"+str(M_2)+h_p_string+str(round(exp_values_2[0,M_2-1],2)))
+axs[1,0].plot(np.arange(M_2+1),exp_values_2[1], label=r"$p = $"+str(p_array[1])+", $M = $"+str(M_2)+h_p_string+str(round(exp_values_2[1,M_2-1],2)))
+axs[1,0].plot(np.arange(M_2+1),exp_values_2[2], label=r"$p = $"+str(p_array[2])+", $M = $"+str(M_2)+h_p_string+str(round(exp_values_2[2,M_2-1],2)))
+axs[1,0].legend(fontsize=font_size, loc="lower right")
+axs[1,0].set_xlabel(r"number of iteration", fontsize=font_size)
+axs[1,0].set_ylabel(r"$\langle H_p \rangle$", fontsize=font_size)
+
+# plot entropy values if no additional entropy minimization has been performed
+axs[0,1].plot(np.arange(M_1+1),entropy_1[0], label=r"$p = $"+str(p_array[0])+", $M = $"+str(M_1)+s_p_string_1+str(round(entropy_1[0,M_1-1],2)))
+axs[0,1].plot(np.arange(M_1+1),entropy_1[1], label=r"$p = $"+str(p_array[1])+", $M = $"+str(M_1)+s_p_string_1+str(round(entropy_1[1,M_1-1],2)))
+axs[0,1].plot(np.arange(M_1+1),entropy_1[2], label=r"$p = $"+str(p_array[2])+", $M = $"+str(M_1)+s_p_string_1+str(round(entropy_1[2,M_1-1],2)))
+axs[0,1].legend(fontsize=font_size, loc="upper right")
+axs[0,1].set_ylabel(r"$S$", fontsize=font_size)
+
+# plot entropy values if additional entropy minimization has been performed
+axs[1,1].plot(np.arange(M_2+1),entropy_2[0], label=r"$p = $"+str(p_array[0])+", $M = $"+str(M_2)+s_p_string_2+str(round(entropy_2[0,M_2-1],2)))
+axs[1,1].plot(np.arange(M_2+1),entropy_2[1], label=r"$p = $"+str(p_array[1])+", $M = $"+str(M_2)+s_p_string_2+str(round(entropy_2[1,M_2-1],2)))
+axs[1,1].plot(np.arange(M_2+1),entropy_2[2], label=r"$p = $"+str(p_array[2])+", $M = $"+str(M_2)+s_p_string_2+str(round(entropy_2[2,M_2-1],2)))
+axs[1,1].legend(fontsize=font_size, loc="upper right")
+axs[1,1].set_xlabel(r"number of iteration", fontsize=font_size)
+axs[1,1].set_ylabel(r"$S$", fontsize=font_size)
+
+# plot fidelity during iterations if no additional entropy minimzation has been performed
+axs[0,2].plot(np.arange(M_1+1),fidelity_1[0], label=r"$p = $"+str(p_array[0])+", $M = $"+str(M_1)+f_p_string+str(round(fidelity_1[0,M_1-1],2)))
+axs[0,2].plot(np.arange(M_1+1),fidelity_1[1], label=r"$p = $"+str(p_array[1])+", $M = $"+str(M_1)+f_p_string+str(round(fidelity_1[1,M_1-1],2)))
+axs[0,2].plot(np.arange(M_1+1),fidelity_1[2], label=r"$p = $"+str(p_array[2])+", $M = $"+str(M_1)+f_p_string+str(round(fidelity_1[2,M_1-1],2)))
+axs[0,2].legend(fontsize=font_size, loc="lower right")
+axs[0,2].set_ylabel(r"$|\langle \gamma,\beta |\phi_0\rangle|$", fontsize=font_size)
+
+# plot fidelity during iterations if additional entropy minimzation has been performed
+axs[1,2].plot(np.arange(M_2+1),fidelity_2[0], label=r"$p = $"+str(p_array[0])+", $M = $"+str(M_2)+f_p_string+str(round(fidelity_2[0,M_2-1],2)))
+axs[1,2].plot(np.arange(M_2+1),fidelity_2[1], label=r"$p = $"+str(p_array[1])+", $M = $"+str(M_2)+f_p_string+str(round(fidelity_2[1,M_2-1],2)))
+axs[1,2].plot(np.arange(M_2+1),fidelity_2[2], label=r"$p = $"+str(p_array[2])+", $M = $"+str(M_2)+f_p_string+str(round(fidelity_2[2,M_2-1],2)))
+axs[1,2].legend(fontsize=font_size, loc="lower right")
+axs[1,1].set_xlabel(r"number of iteration", fontsize=font_size)
+axs[1,2].set_ylabel(r"$|\langle \gamma,\beta |\phi_0\rangle|$", fontsize=font_size)
+
+plt.savefig("images/energy_entropy_comparison_montecarlo_"+rand_approach+"_"+opt_approach+".png", dpi=200)
+
+
+
+font_size = 10 # label font size
+fig, axs = plt.subplots(2,3, constrained_layout=True, figsize=(15,7), sharex=True, sharey=True)
+
+axs[0,0].bar(np.arange(len(state_probs_1[0])), state_probs_1[0])
+plot_fock_distribution(final_state_p1_1, fig=fig, ax=axs[0,1])
+plot_fock_distribution(final_state_p3_1, fig=fig, ax=axs[0,2])
+
+plot_fock_distribution(final_state_p1_2, fig=fig, ax=axs[1,0])
+plot_fock_distribution(final_state_p2_2, fig=fig, ax=axs[1,1])
+plot_fock_distribution(final_state_p3_2, fig=fig, ax=axs[1,2])
+
+axs[0,0].set_ylabel(r"$|\alpha_i|^2 = \alpha^*_i \alpha_i$", fontsize=font_size)
+axs[1,0].set_ylabel(r"$|\alpha_i|^2 = \alpha^*_i \alpha_i$", fontsize=font_size)
+
+axs[1,0].set_xlabel(r"qubit$_i$ ($|\gamma,\beta\rangle_{end}$)", fontsize=font_size)
+axs[1,1].set_xlabel(r"qubit$_i$ ($|\gamma,\beta\rangle_{end}$)", fontsize=font_size)
+axs[1,2].set_xlabel(r"qubit$_i$ ($|\gamma,\beta\rangle_{end}$)", fontsize=font_size)
+
+# due to plot_fock_distribution function the labels have to be set to zero explicitly
+axs[0,0].set_xlabel(" ")
+axs[0,1].set_xlabel(" ")
+axs[0,2].set_xlabel(" ")
+axs[0,1].set_ylabel(" ")
+axs[0,2].set_ylabel(" ")
+axs[1,1].set_ylabel(" ")
+axs[1,2].set_ylabel(" ")
+
+plt.savefig("images/fock_distribution_final_states_comparison_montecarlo_"+rand_approach+"_"+opt_approach+".png", dpi=200)
